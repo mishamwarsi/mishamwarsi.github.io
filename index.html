@@ -1,445 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAPulse — SAP Learning, Config & Tech Insights</title>
-  <meta name="description" content="Deep-dive blogs on SAP Learning, Configuration, Integration and emerging tech." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
-
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Misham Warsi — SAP, Integration & Tech Blog</title>
+<meta name="description" content="Practical deep-dives on SAP configuration, integration, ABAP and tech by Misham Warsi."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-/* ══════════════════════════════════════
-   TOKENS
-══════════════════════════════════════ */
-:root {
-  --bg:        #080c14;
-  --bg2:       #0d1220;
-  --surface:   #111827;
-  --surface2:  #1a2236;
-  --border:    rgba(255,255,255,0.07);
-  --border-hi: rgba(0,112,255,0.3);
-
-  --blue:  #0070ff;
-  --teal:  #00c8a0;
-  --warn:  #f59e0b;
-
-  --text:   #e8edf5;
-  --text2:  #8896b0;
-  --text3:  #4a5568;
-
-  --c-config:      #0070ff;
-  --c-int:         #00c8a0;
-  --c-learn:       #f59e0b;
-  --c-abap:        #a855f7;
-  --c-btp:         #38bdf8;
-  --c-tech:        #f97316;
-
-  --fh: 'Syne', system-ui, sans-serif;
-  --fb: 'Epilogue', system-ui, sans-serif;
-  --ease: cubic-bezier(0.22,1,0.36,1);
-}
-
-/* ══════════════════════════════════════
-   RESET & BASE
-══════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:16px}
+:root{--bg:#05080f;--surf:#0f1523;--surf2:#161d2e;--border:rgba(255,255,255,0.06);--gold:#e8a020;--gold2:#f5c842;--teal:#00bfa5;--text:#edf0f7;--text2:#7d8ba0;--text3:#3a4559;--fh:'Playfair Display',Georgia,serif;--fb:'DM Sans',system-ui,sans-serif;--ease:cubic-bezier(0.22,1,0.36,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-weight:300;line-height:1.7;overflow-x:hidden;cursor:none}
-a{color:inherit;text-decoration:none}
-button{font-family:var(--fb);border:none;background:none;cursor:none}
-.container{max-width:1160px;margin:0 auto;padding:0 5%}
-
-/* ══════════════════════════════════════
-   CURSOR
-══════════════════════════════════════ */
-#cr{position:fixed;z-index:9999;pointer-events:none;width:36px;height:36px;border:1.5px solid var(--blue);border-radius:50%;transform:translate(-50%,-50%);transition:width .18s var(--ease),height .18s var(--ease),background .18s;mix-blend-mode:screen}
-#cd{position:fixed;z-index:10000;pointer-events:none;width:5px;height:5px;background:var(--blue);border-radius:50%;transform:translate(-50%,-50%)}
-body:has(a:hover) #cr,body:has(button:hover) #cr{width:52px;height:52px;background:rgba(0,112,255,0.1)}
-
-/* ══════════════════════════════════════
-   BACKGROUND
-══════════════════════════════════════ */
-.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,112,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,112,255,0.04) 1px,transparent 1px);background-size:48px 48px}
-.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px)}
-.orb1{width:500px;height:500px;top:-80px;left:-80px;background:radial-gradient(circle,rgba(0,112,255,0.12),transparent 70%);transition:transform .6s ease}
-.orb2{width:380px;height:380px;top:40%;right:-60px;background:radial-gradient(circle,rgba(0,200,160,0.09),transparent 70%)}
-.orb3{width:320px;height:320px;bottom:12%;left:18%;background:radial-gradient(circle,rgba(0,112,255,0.07),transparent 70%)}
-
-/* ══════════════════════════════════════
-   REVEAL
-══════════════════════════════════════ */
-.ru{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}
-.ru.in{opacity:1;transform:none}
-.rr{opacity:0;transform:translateX(40px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
-.rr.in{opacity:1;transform:none}
-
-/* ══════════════════════════════════════
-   SHARED COMPONENTS
-══════════════════════════════════════ */
-.sec-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--fh);font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
-.sec-tag::before{content:'';display:block;width:20px;height:1px;background:var(--blue)}
-.sec-h2{font-family:var(--fh);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.15;margin-bottom:44px}
-.btn-pill{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;font-family:var(--fh);font-size:.82rem;font-weight:600;letter-spacing:.03em;padding:10px 22px;border-radius:100px;transition:background .2s,transform .2s,box-shadow .2s}
-.btn-pill:hover{background:#1a84ff;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,112,255,.35)}
-.chip{display:inline-block;font-family:var(--fh);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 11px;border-radius:100px}
-.chip-int   {background:rgba(0,200,160,.15);color:var(--teal);border:1px solid rgba(0,200,160,.25)}
-.chip-config{background:rgba(0,112,255,.12);color:var(--blue);border:1px solid rgba(0,112,255,.25)}
-.chip-abap  {background:rgba(168,85,247,.12);color:var(--c-abap);border:1px solid rgba(168,85,247,.25)}
-.chip-tech  {background:rgba(249,115,22,.12);color:var(--c-tech);border:1px solid rgba(249,115,22,.25)}
-.chip-learn {background:rgba(245,158,11,.12);color:var(--warn);border:1px solid rgba(245,158,11,.25)}
-.chip-btp   {background:rgba(56,189,248,.12);color:var(--c-btp);border:1px solid rgba(56,189,248,.25)}
-.hidden{display:none!important}
-
-/* ══════════════════════════════════════
-   HEADER
-══════════════════════════════════════ */
-#hdr{position:fixed;top:0;left:0;right:0;z-index:900;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
-#hdr.scrolled{background:rgba(8,12,20,.88);backdrop-filter:blur(20px);border-color:var(--border)}
-.hdr-in{max-width:1160px;margin:0 auto;padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-word{font-family:var(--fh);font-size:1.32rem;font-weight:800;letter-spacing:-.02em}
-.logo-word em{font-style:normal;color:var(--blue)}
-.mnav{display:flex;align-items:center;gap:34px}
-.na{font-family:var(--fh);font-size:.82rem;font-weight:600;color:var(--text2);letter-spacing:.04em;transition:color .2s;position:relative}
-.na::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--blue);transition:width .3s var(--ease)}
-.na:hover{color:var(--text)}
-.na:hover::after{width:100%}
-.hdr-r{display:flex;align-items:center;gap:14px}
+a{color:inherit;text-decoration:none}button{font-family:var(--fb);border:none;background:none;cursor:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 5%}
+#cr{position:fixed;z-index:9999;pointer-events:none;width:34px;height:34px;border:1.5px solid var(--gold);border-radius:50%;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s;mix-blend-mode:screen}
+#cd{position:fixed;z-index:10000;pointer-events:none;width:5px;height:5px;background:var(--gold);border-radius:50%;transform:translate(-50%,-50%)}
+body:has(a:hover) #cr,body:has(button:hover) #cr{width:50px;height:50px;background:rgba(232,160,32,.1)}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(232,160,32,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(232,160,32,0.03)1px,transparent 1px);background-size:52px 52px}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px)}
+.orb1{width:480px;height:480px;top:-80px;left:-80px;background:radial-gradient(circle,rgba(232,160,32,.1),transparent 70%);transition:transform .6s}
+.orb2{width:360px;height:360px;bottom:10%;right:-60px;background:radial-gradient(circle,rgba(0,191,165,.07),transparent 70%)}
+.ru{opacity:0;transform:translateY(24px);transition:opacity .65s var(--ease),transform .65s var(--ease);transition-delay:var(--d,0s)}.ru.in{opacity:1;transform:none}
+.rr{opacity:0;transform:translateX(36px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}.rr.in{opacity:1;transform:none}
+/* HEADER */
+#hdr{position:fixed;top:0;left:0;right:0;z-index:900;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+#hdr.scrolled{background:rgba(5,8,15,.9);backdrop-filter:blur(20px);border-color:var(--border)}
+.hdr-in{max-width:1160px;margin:0 auto;padding:0 5%;height:70px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;flex-direction:column;line-height:1}.logo-name{font-family:var(--fh);font-size:1.2rem;font-weight:900;color:var(--text)}.logo-sub{font-size:.57rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-top:2px}
+nav.mnav{display:flex;align-items:center;gap:28px}
+.na{font-size:.78rem;font-weight:500;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:2px}
+.na::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .3s var(--ease)}
+.na:hover{color:var(--text)}.na:hover::after,.na.active::after{width:100%}.na.active{color:var(--text)}
+.hdr-r{display:flex;align-items:center;gap:12px}
+.btn-gold{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#05080f;font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;padding:9px 20px;border-radius:3px;transition:background .2s,transform .2s,box-shadow .2s}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(232,160,32,.35)}
+.btn-out{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--text2);font-weight:500;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;padding:9px 20px;border-radius:3px;border:1px solid var(--border);transition:color .2s,border-color .2s}
+.btn-out:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
 .burg{display:none;flex-direction:column;gap:5px;padding:8px}
 .burg span{display:block;width:22px;height:1.5px;background:var(--text);transition:transform .3s,opacity .3s}
-.mob-nav{display:none;flex-direction:column;background:rgba(8,12,20,.97);border-top:1px solid var(--border);padding:22px 5% 30px;gap:18px}
-.mob-nav.open{display:flex}
-.mob-nav a{font-family:var(--fh);font-size:1rem;font-weight:600;color:var(--text2);transition:color .2s}
-.mob-nav a:hover,.mob-nav .mcta{color:var(--blue)}
-
-/* ══════════════════════════════════════
-   HERO
-══════════════════════════════════════ */
-.hero{min-height:100vh;display:grid;grid-template-columns:1fr auto;align-items:center;gap:40px;padding:120px 5% 80px;max-width:1160px;margin:0 auto;position:relative}
+.mob-nav{display:none;flex-direction:column;background:rgba(5,8,15,.97);border-top:1px solid var(--border);padding:20px 5% 26px;gap:14px}
+.mob-nav.open{display:flex}.mob-nav a{font-size:.88rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);transition:color .2s}.mob-nav a:hover,.mob-nav a.active{color:var(--gold)}
+.sec-tag{display:inline-flex;align-items:center;gap:8px;font-size:.63rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.sec-tag::before{content:'';width:18px;height:1px;background:var(--gold)}
+.sec-h2{font-family:var(--fh);font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:700;line-height:1.15;margin-bottom:36px}
+.chip{display:inline-block;font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:3px}
+.chip-sap{background:rgba(232,160,32,.14);color:var(--gold);border:1px solid rgba(232,160,32,.3)}
+.chip-int{background:rgba(0,191,165,.12);color:var(--teal);border:1px solid rgba(0,191,165,.3)}
+.chip-abap{background:rgba(139,92,246,.12);color:#a78bfa;border:1px solid rgba(139,92,246,.3)}
+.chip-tech{background:rgba(249,115,22,.12);color:#fb923c;border:1px solid rgba(249,115,22,.3)}
+.chip-learn{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.chip-btp{background:rgba(20,184,166,.12);color:#2dd4bf;border:1px solid rgba(20,184,166,.3)}
+.mq{overflow:hidden;background:var(--surf);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:11px 0;position:relative;z-index:2}
+.mq-t{display:flex;gap:26px;white-space:nowrap;animation:mqA 28s linear infinite;font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.mq-t .dot{color:var(--gold);font-size:.46rem}@keyframes mqA{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.site-footer{border-top:1px solid var(--border);padding:50px 0 30px;position:relative;z-index:2}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:34px;margin-bottom:38px}
+.fb-brand p{font-size:.77rem;color:var(--text3);line-height:1.7;max-width:210px;margin-top:10px}
+.fcol{display:flex;flex-direction:column;gap:8px}.fch{font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.fcol a{font-size:.77rem;color:var(--text3);transition:color .2s}.fcol a:hover{color:var(--gold)}
+.fbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border);padding-top:22px;font-size:.72rem;color:var(--text3)}
+.fbl{display:flex;gap:18px}.fbl a{color:var(--text3);transition:color .2s}.fbl a:hover{color:var(--gold)}
+.hidden{display:none!important}
+/* HERO */
+.hero-section{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:48px;padding:120px 5% 80px;max-width:1160px;margin:0 auto;position:relative}
 .float-w{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
-.float-w span{position:absolute;left:var(--x);top:var(--y);font-family:var(--fh);font-size:.64rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,112,255,.16);animation:floatW 8s ease-in-out infinite;animation-delay:var(--d)}
-@keyframes floatW{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-16px);opacity:1}}
-.hero-content{position:relative;z-index:2}
-.hero-badge{display:inline-flex;align-items:center;gap:10px;font-family:var(--fh);font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);background:rgba(0,112,255,.08);border:1px solid rgba(0,112,255,.2);border-radius:100px;padding:8px 16px;margin-bottom:26px}
-.bdot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:bdotP 2s ease-in-out infinite}
-@keyframes bdotP{0%,100%{box-shadow:0 0 6px var(--teal)}50%{box-shadow:0 0 14px var(--teal)}}
-.hero-h1{font-family:var(--fh);font-size:clamp(2.8rem,6.5vw,5.2rem);font-weight:800;line-height:1.0;margin-bottom:22px;letter-spacing:-.02em}
-.h1g{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.h1o{-webkit-text-stroke:1.5px rgba(255,255,255,.22);color:transparent}
-.hero-p{font-size:1.02rem;color:var(--text2);max-width:510px;margin-bottom:34px;line-height:1.75}
-.hero-acts{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:44px}
-.btn-ghost{font-family:var(--fh);font-size:.88rem;font-weight:600;color:var(--text2);border-bottom:1px solid transparent;padding-bottom:2px;transition:color .2s,border-color .2s}
-.btn-ghost:hover{color:var(--text);border-color:var(--text)}
-.btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;font-family:var(--fh);font-size:.9rem;font-weight:700;padding:14px 28px;border-radius:100px;transition:background .2s,transform .2s,box-shadow .2s}
-.btn-hero:hover{background:#1a84ff;transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,112,255,.4)}
-.hero-stats{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 24px;width:fit-content;gap:0}
-.hs{text-align:center;padding:0 22px}
-.hs-n{font-family:var(--fh);font-size:1.9rem;font-weight:800;color:var(--blue);line-height:1}
-.hs-p{font-family:var(--fh);font-size:1.1rem;color:var(--teal)}
-.hs-l{display:block;font-size:.68rem;font-weight:500;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
-.hs-div{width:1px;height:38px;background:var(--border)}
-
-/* Hero panel */
-.hero-panel{position:relative;z-index:2;display:flex;flex-direction:column;gap:18px;width:270px}
-.pc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:12px;transition:border-color .3s,transform .3s}
-.pc:hover{border-color:var(--border-hi);transform:translateY(-2px)}
-.pc-ico{font-size:1.4rem;flex-shrink:0}
-.pc-t{font-family:var(--fh);font-size:.8rem;font-weight:700}
-.pc-s{font-size:.68rem;color:var(--text3);margin-top:2px}
-.pc-badge{margin-left:auto;flex-shrink:0;font-family:var(--fh);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,112,255,.15);color:var(--blue);border:1px solid rgba(0,112,255,.3);padding:3px 9px;border-radius:100px}
-.pc-live{margin-left:auto;flex-shrink:0;display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--teal)}
-.ldot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:bdotP 1.5s ease-in-out infinite}
-.pcenter{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border-hi);border-radius:16px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:18px}
-.pring{width:68px;height:68px;border-radius:50%;border:2px solid rgba(0,112,255,.3);display:flex;align-items:center;justify-content:center;animation:spin 12s linear infinite}
-.pring-in{width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,rgba(0,112,255,.2),transparent);border:1px solid rgba(0,200,160,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--blue)}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.pmods{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
-.pmods span{font-family:var(--fh);font-size:.6rem;font-weight:700;letter-spacing:.08em;background:rgba(0,112,255,.1);border:1px solid rgba(0,112,255,.2);color:var(--blue);padding:3px 9px;border-radius:100px;transition:background .2s}
-.pmods span:hover{background:rgba(0,112,255,.25)}
-
-/* Scroll hint */
-.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
-.sm{width:21px;height:32px;border:1.5px solid var(--text3);border-radius:11px;display:flex;align-items:flex-start;justify-content:center;padding-top:5px}
-.sw{width:3px;height:6px;background:var(--blue);border-radius:2px;animation:swDown 2s ease-in-out infinite}
-@keyframes swDown{0%,100%{transform:translateY(0);opacity:1}80%{transform:translateY(9px);opacity:0}}
-
-/* ══════════════════════════════════════
-   MARQUEE
-══════════════════════════════════════ */
-.mq-wrap{overflow:hidden;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;position:relative;z-index:2}
-.mq-track{display:flex;gap:26px;white-space:nowrap;animation:mq 26s linear infinite;font-family:var(--fh);font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
-.mq-track .dot{color:var(--blue);font-size:.5rem}
-@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* ══════════════════════════════════════
-   TOPICS
-══════════════════════════════════════ */
-.topics-sec{padding:96px 0;position:relative;z-index:2}
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.tc{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 24px;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;position:relative;overflow:hidden}
-.tc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s}
-.tc:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(0,0,0,.4)}
-.tc:hover::before{opacity:1}
-.tc-a::before{background:linear-gradient(90deg,var(--c-config),transparent)}.tc-a:hover{border-color:rgba(0,112,255,.3)}
-.tc-b::before{background:linear-gradient(90deg,var(--c-int),transparent)}.tc-b:hover{border-color:rgba(0,200,160,.3)}
-.tc-c::before{background:linear-gradient(90deg,var(--c-learn),transparent)}.tc-c:hover{border-color:rgba(245,158,11,.3)}
-.tc-d::before{background:linear-gradient(90deg,var(--c-abap),transparent)}.tc-d:hover{border-color:rgba(168,85,247,.3)}
-.tc-e::before{background:linear-gradient(90deg,var(--c-btp),transparent)}.tc-e:hover{border-color:rgba(56,189,248,.3)}
-.tc-f::before{background:linear-gradient(90deg,var(--c-tech),transparent)}.tc-f:hover{border-color:rgba(249,115,22,.3)}
-.tc-ico{font-size:1.9rem;margin-bottom:12px}
-.tc h3{font-family:var(--fh);font-size:.95rem;font-weight:700;margin-bottom:9px;line-height:1.3}
-.tc p{font-size:.82rem;color:var(--text2);margin-bottom:14px;line-height:1.6}
-.tc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
-.tc-tags span{font-size:.63rem;font-family:var(--fh);font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--text3);padding:2px 9px;border-radius:100px}
-.tc-link{font-family:var(--fh);font-size:.76rem;font-weight:700;color:var(--blue);transition:letter-spacing .2s}
-.tc-link:hover{letter-spacing:.06em}
-
-/* ══════════════════════════════════════
-   FEATURED
-══════════════════════════════════════ */
-.feat-sec{padding:80px 0 96px;background:linear-gradient(180deg,transparent,rgba(0,112,255,.03),transparent);position:relative;z-index:2}
-.feat-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:start}
-.feat-main{background:var(--surface);border:1px solid var(--border);border-radius:24px;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s}
-.feat-main:hover{transform:translateY(-4px);box-shadow:0 22px 55px rgba(0,0,0,.4)}
-.feat-img{height:190px;position:relative;background:linear-gradient(135deg,#001433,#002b66,#003d1a);overflow:hidden}
-.feat-img-pat{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(0,112,255,.06) 0px,rgba(0,112,255,.06) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(0,112,255,.06) 0px,rgba(0,112,255,.06) 1px,transparent 1px,transparent 40px)}
-.feat-img .chip{position:absolute;top:18px;left:22px}
-.feat-body{padding:26px 26px 30px}
-.feat-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.feat-cat{font-family:var(--fh);font-size:.68rem;font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
-.feat-time{font-size:.7rem;color:var(--text3)}
-.feat-title{font-family:var(--fh);font-size:1.25rem;font-weight:700;line-height:1.3;margin-bottom:10px}
-.feat-exc{font-size:.84rem;color:var(--text2);margin-bottom:22px;line-height:1.65}
-.feat-foot{display:flex;align-items:center;justify-content:space-between}
-.auth-row{display:flex;align-items:center;gap:10px}
-.auth-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:800;font-size:.88rem;color:#fff}
-.auth-name{font-family:var(--fh);font-size:.8rem;font-weight:700}
-.auth-date{font-size:.7rem;color:var(--text3)}
-.read-arr{font-family:var(--fh);font-size:.8rem;font-weight:700;color:var(--blue);transition:letter-spacing .2s}
-.read-arr:hover{letter-spacing:.06em}
-.feat-side{display:flex;flex-direction:column;gap:14px}
-.feat-mini{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;gap:14px;transition:transform .3s var(--ease),border-color .3s}
-.feat-mini:hover{transform:translateY(-3px);border-color:var(--border-hi)}
-.fmico{width:42px;height:42px;flex-shrink:0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.fmico-a{background:linear-gradient(135deg,#001a4d,#003399)}
-.fmico-b{background:linear-gradient(135deg,#1a001a,#3d003d)}
-.fmico-c{background:linear-gradient(135deg,#1a0a00,#3d1800)}
-.fm-body{flex:1;min-width:0}
-.fm-body h4{font-family:var(--fh);font-size:.86rem;font-weight:700;margin:7px 0 5px;line-height:1.35}
-.fm-body p{font-size:.76rem;color:var(--text2);line-height:1.5;margin-bottom:10px}
-.mini-foot{display:flex;align-items:center;justify-content:space-between}
-.mini-foot span{font-size:.68rem;color:var(--text3)}
-.mini-foot a{font-family:var(--fh);font-size:.73rem;font-weight:700;color:var(--blue);transition:letter-spacing .2s}
-.mini-foot a:hover{letter-spacing:.05em}
-
-/* ══════════════════════════════════════
-   ALL POSTS
-══════════════════════════════════════ */
-.blogs-sec{padding:80px 0 96px;position:relative;z-index:2}
-.blogs-hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:8px}
-.srch{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:9px 18px;transition:border-color .2s}
-.srch:focus-within{border-color:rgba(0,112,255,.4)}
-.srch svg{color:var(--text3);flex-shrink:0}
-.srch input{background:none;border:none;outline:none;font-family:var(--fb);font-size:.84rem;color:var(--text);width:190px}
-.srch input::placeholder{color:var(--text3)}
-.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:34px}
-.pill{font-family:var(--fh);font-size:.73rem;font-weight:600;letter-spacing:.05em;padding:7px 17px;border-radius:100px;border:1px solid var(--border);color:var(--text3);background:transparent;transition:background .2s,color .2s,border-color .2s}
-.pill:hover,.pill.active{background:rgba(0,112,255,.1);color:var(--blue);border-color:rgba(0,112,255,.3)}
-.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:44px}
-.acard{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
-.acard:hover{transform:translateY(-5px);box-shadow:0 18px 48px rgba(0,0,0,.44);border-color:rgba(0,112,255,.18)}
-.acard.hidden{display:none}
-.atop{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:relative;overflow:hidden}
-.atop::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0,rgba(255,255,255,.02) 1px,transparent 1px,transparent 12px)}
-.atop-config {background:linear-gradient(135deg,#001a4d,#003399)}
-.atop-int    {background:linear-gradient(135deg,#002b1a,#005533)}
-.atop-learn  {background:linear-gradient(135deg,#1a1000,#3d2800)}
-.atop-abap   {background:linear-gradient(135deg,#1a001a,#3d003d)}
-.atop-btp    {background:linear-gradient(135deg,#001a2e,#003359)}
-.atop-tech   {background:linear-gradient(135deg,#1a0a00,#3d1800)}
-.aemoji{font-size:2rem;z-index:1}
-.acat{z-index:1;font-family:var(--fh);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px}
-.acat-config {background:rgba(0,112,255,.2);color:#60a5fa}
-.acat-int    {background:rgba(0,200,160,.2);color:#34d399}
-.acat-learn  {background:rgba(245,158,11,.2);color:#fbbf24}
-.acat-abap   {background:rgba(168,85,247,.2);color:#c084fc}
-.acat-btp    {background:rgba(56,189,248,.2);color:#7dd3fc}
-.acat-tech   {background:rgba(249,115,22,.2);color:#fb923c}
-.abody{padding:18px 20px 20px}
-.abody h3{font-family:var(--fh);font-size:.9rem;font-weight:700;line-height:1.4;margin-bottom:7px}
-.abody p{font-size:.78rem;color:var(--text2);line-height:1.6;margin-bottom:14px}
-.afoot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:12px}
-.atags{display:flex;gap:5px}
-.atags span{font-size:.6rem;font-family:var(--fh);font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--text3);padding:2px 7px;border-radius:4px}
-.ainfo{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--text3)}
-.no-res{text-align:center;padding:56px 0;color:var(--text3)}
-.no-res span{font-size:2.4rem;display:block;margin-bottom:10px}
-.load-row{text-align:center}
-.btn-load{font-family:var(--fh);font-size:.84rem;font-weight:700;color:var(--blue);border:1.5px solid rgba(0,112,255,.3);padding:12px 34px;border-radius:100px;background:transparent;transition:background .2s,border-color .2s,transform .2s}
-.btn-load:hover{background:rgba(0,112,255,.1);border-color:var(--blue);transform:translateY(-2px)}
-.btn-load:disabled{opacity:.4;pointer-events:none}
-
-/* ══════════════════════════════════════
-   ABOUT
-══════════════════════════════════════ */
-.about-sec{padding:96px 0;background:linear-gradient(180deg,transparent,rgba(0,112,255,.03),transparent);position:relative;z-index:2}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-.about-txt p{font-size:.93rem;color:var(--text2);margin-bottom:16px;line-height:1.75}
-.about-txt .sec-h2{margin-bottom:18px}
-.abadges{display:flex;flex-direction:column;gap:9px;margin-top:26px}
-.abadge{display:inline-flex;align-items:center;gap:9px;font-family:var(--fh);font-size:.78rem;font-weight:600;background:var(--surface);border:1px solid var(--border);padding:9px 16px;border-radius:12px;color:var(--text2);width:fit-content;transition:border-color .2s,color .2s}
-.abadge:hover{border-color:var(--border-hi);color:var(--text)}
-.av-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px 32px;text-align:center;position:relative;overflow:hidden}
-.av-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--teal))}
-.av-av{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:1.9rem;font-weight:800;color:#fff;box-shadow:0 8px 26px rgba(0,112,255,.3)}
-.av-name{font-family:var(--fh);font-size:1.15rem;font-weight:800;margin-bottom:3px}
-.av-role{font-size:.78rem;color:var(--text3);margin-bottom:22px}
-.av-div{height:1px;background:var(--border);margin-bottom:22px}
-.av-stats{display:flex;justify-content:center;margin-bottom:22px}
-.avs{flex:1;text-align:center}
-.avs:not(:last-child){border-right:1px solid var(--border)}
-.avs-n{display:block;font-family:var(--fh);font-size:1.7rem;font-weight:800;color:var(--blue)}
-.avs-l{font-size:.63rem;font-family:var(--fh);font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
-.av-socs{display:flex;justify-content:center;gap:9px}
-.av-soc{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.68rem;font-weight:800;color:var(--text3);text-transform:uppercase;transition:background .2s,color .2s,border-color .2s}
-.av-soc:hover{background:rgba(0,112,255,.15);color:var(--blue);border-color:rgba(0,112,255,.3)}
-
-/* ══════════════════════════════════════
-   NEWSLETTER
-══════════════════════════════════════ */
-.sub-sec{padding:96px 0;position:relative;z-index:2;overflow:hidden}
-.sub-bg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--fh);font-size:clamp(110px,17vw,210px);font-weight:800;color:rgba(0,112,255,.04);pointer-events:none;user-select:none;white-space:nowrap;letter-spacing:-.04em}
-.sub-inner{max-width:600px;margin:0 auto;text-align:center;position:relative;z-index:1}
-.sub-ico{font-size:1.9rem;color:var(--blue);margin-bottom:18px;display:block}
-.sub-h2{font-family:var(--fh);font-size:clamp(1.9rem,4vw,2.9rem);font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
-.sub-p{color:var(--text2);margin-bottom:34px;font-size:.98rem}
-.sub-form{display:flex;gap:9px;max-width:460px;margin:0 auto 14px;flex-wrap:wrap}
-.sub-form input{flex:1;min-width:190px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:12px 20px;font-family:var(--fb);font-size:.88rem;color:var(--text);outline:none;transition:border-color .2s}
-.sub-form input:focus{border-color:rgba(0,112,255,.5)}
-.sub-form input::placeholder{color:var(--text3)}
-.sub-ok{font-family:var(--fh);font-size:.88rem;font-weight:700;color:var(--teal);animation:fadeUp .5s var(--ease)}
+.float-w span{position:absolute;left:var(--x);top:var(--y);font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(232,160,32,.14);animation:fw 9s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes fw{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-14px);opacity:1}}
+.htag{display:inline-flex;align-items:center;gap:9px;font-size:.65rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);background:rgba(232,160,32,.07);border:1px solid rgba(232,160,32,.2);border-radius:3px;padding:6px 14px;margin-bottom:24px}
+.hdot{width:5px;height:5px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);animation:glow 2s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 6px var(--teal)}50%{box-shadow:0 0 14px var(--teal)}}
+.hero-h1{font-family:var(--fh);font-size:clamp(2.8rem,5.5vw,5rem);font-weight:900;line-height:1.05;margin-bottom:20px;letter-spacing:-.01em}
+.h1g{background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h1i{font-style:italic;color:rgba(237,240,247,.28)}
+.hero-p{font-size:1rem;color:var(--text2);max-width:500px;margin-bottom:32px;line-height:1.8}
+.hero-acts{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+.hero-stats{display:flex;align-items:center;background:var(--surf);border:1px solid var(--border);border-radius:6px;padding:18px 22px;width:fit-content}
+.hs{text-align:center;padding:0 20px}.hs-n{font-family:var(--fh);font-size:1.9rem;font-weight:900;color:var(--gold);line-height:1}
+.hs-p{font-family:var(--fh);font-size:1.1rem;color:var(--teal)}.hs-l{display:block;font-size:.62rem;font-weight:500;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.hs-div{width:1px;height:36px;background:var(--border)}
+.hv-card{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s}
+.hv-card:hover{transform:translateY(-5px);box-shadow:0 24px 56px rgba(0,0,0,.5)}
+.hv-top{height:155px;background:linear-gradient(135deg,#0d1a06,#1a2e0a,#0a1a1a);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hv-top::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(232,160,32,.04)0,rgba(232,160,32,.04)1px,transparent 1px,transparent 14px)}
+.hv-ico{font-size:3rem;z-index:1;opacity:.8}
+.hv-body{padding:20px 22px}
+.hv-meta{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.hv-cat{font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.hv-time{font-size:.66rem;color:var(--text3)}
+.hv-title{font-family:var(--fh);font-size:1.05rem;font-weight:700;line-height:1.35;margin-bottom:12px}
+.hv-auth{display:flex;align-items:center;gap:9px}
+.hv-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:900;font-size:.8rem;color:#05080f}
+.hv-an{font-size:.75rem;font-weight:500}.hv-date{font-size:.66rem;color:var(--text3)}
+.hv-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hv-badge{display:flex;align-items:center;gap:6px;background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:7px 12px;font-size:.7rem;color:var(--text2)}
+.scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.sm{width:20px;height:30px;border:1.5px solid var(--text3);border-radius:10px;display:flex;align-items:flex-start;justify-content:center;padding-top:4px}
+.sw{width:2.5px;height:6px;background:var(--gold);border-radius:2px;animation:sd 2s ease-in-out infinite}
+@keyframes sd{0%,100%{transform:translateY(0);opacity:1}80%{transform:translateY(8px);opacity:0}}
+/* POSTS */
+.recent-sec{padding:88px 0;position:relative;z-index:2}
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{background:var(--surf);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(0,0,0,.45);border-color:rgba(232,160,32,.18)}
+.ptop{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:relative;overflow:hidden}
+.ptop::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.02)0,rgba(255,255,255,.02)1px,transparent 1px,transparent 12px)}
+.ptop-sap{background:linear-gradient(135deg,#1a1000,#3d2800)}.ptop-int{background:linear-gradient(135deg,#001a0d,#00331a)}.ptop-abap{background:linear-gradient(135deg,#0d001a,#1a0033)}.ptop-tech{background:linear-gradient(135deg,#1a0a00,#330d00)}.ptop-learn{background:linear-gradient(135deg,#001a33,#002b4d)}.ptop-btp{background:linear-gradient(135deg,#001a1a,#003333)}
+.pico{font-size:1.9rem;z-index:1}
+.pbody{padding:16px 18px 18px}
+.pbody h3{font-family:var(--fh);font-size:.92rem;font-weight:700;line-height:1.4;margin-bottom:6px}
+.pbody p{font-size:.76rem;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.pfoot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:11px}
+.pdate{font-size:.66rem;color:var(--text3)}.parr{font-size:.73rem;font-weight:500;color:var(--gold);transition:letter-spacing .2s}.parr:hover{letter-spacing:.05em}
+.view-all{text-align:center;margin-top:36px}
+/* TOPICS PREVIEW */
+.topics-prev{padding:0 0 88px;position:relative;z-index:2}
+.tp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tc{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:22px 20px;transition:transform .3s var(--ease),border-color .3s}
+.tc:hover{transform:translateY(-4px)}.tc-a:hover{border-color:rgba(232,160,32,.3)}.tc-b:hover{border-color:rgba(0,191,165,.3)}.tc-c:hover{border-color:rgba(59,130,246,.3)}.tc-d:hover{border-color:rgba(139,92,246,.3)}.tc-e:hover{border-color:rgba(20,184,166,.3)}.tc-f:hover{border-color:rgba(249,115,22,.3)}
+.tc-ico{font-size:1.7rem;margin-bottom:10px}
+.tc h3{font-family:var(--fh);font-size:.9rem;font-weight:700;margin-bottom:6px}
+.tc p{font-size:.76rem;color:var(--text2);line-height:1.55;margin-bottom:12px}
+.tc-link{font-size:.72rem;font-weight:500;color:var(--gold);transition:letter-spacing .2s}.tc-link:hover{letter-spacing:.05em}
+/* NEWSLETTER */
+.nl-sec{padding:80px 0;background:linear-gradient(180deg,transparent,rgba(232,160,32,.03),transparent);position:relative;z-index:2}
+.nl-inner{max-width:560px;margin:0 auto;text-align:center}
+.nl-ico{font-size:1.9rem;margin-bottom:14px;display:block}
+.nl-h{font-family:var(--fh);font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:900;margin-bottom:10px}
+.nl-p{color:var(--text2);margin-bottom:28px;font-size:.94rem}
+.nl-form{display:flex;gap:8px;max-width:420px;margin:0 auto 10px;flex-wrap:wrap}
+.nl-form input{flex:1;min-width:170px;background:var(--surf);border:1px solid var(--border);border-radius:3px;padding:10px 16px;font-family:var(--fb);font-size:.85rem;color:var(--text);outline:none;transition:border-color .2s}
+.nl-form input:focus{border-color:rgba(232,160,32,.5)}.nl-form input::placeholder{color:var(--text3)}
+.nl-ok{font-weight:500;font-size:.86rem;color:var(--teal);animation:fadeUp .5s var(--ease)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.sub-note{font-size:.73rem;color:var(--text3);margin-top:10px}
-
-/* ══════════════════════════════════════
-   FOOTER
-══════════════════════════════════════ */
-.footer{border-top:1px solid var(--border);padding:56px 0 36px;position:relative;z-index:2}
-.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:44px}
-.fb p{font-size:.8rem;color:var(--text3);line-height:1.7;max-width:230px;margin-top:12px}
-.fcol{display:flex;flex-direction:column;gap:9px}
-.fch{font-family:var(--fh);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
-.fcol a{font-size:.8rem;color:var(--text3);transition:color .2s}
-.fcol a:hover{color:var(--blue)}
-.fbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;border-top:1px solid var(--border);padding-top:26px;font-size:.76rem;color:var(--text3)}
-.fbl{display:flex;gap:22px}
-.fbl a{color:var(--text3);transition:color .2s}
-.fbl a:hover{color:var(--blue)}
-
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
-@media(max-width:1024px){
-  .hero{grid-template-columns:1fr}
-  .hero-panel{display:none}
-  .tgrid{grid-template-columns:repeat(2,1fr)}
-  .agrid{grid-template-columns:repeat(2,1fr)}
-  .feat-grid{grid-template-columns:1fr}
-  .feat-side{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .about-grid{grid-template-columns:1fr;gap:44px}
-  .fg{grid-template-columns:1fr 1fr}
-}
-@media(max-width:768px){
-  .mnav{display:none}
-  .burg{display:flex}
-  .hdr-r .btn-pill{display:none}
-  .tgrid,.agrid,.feat-side{grid-template-columns:1fr}
-  .hero-stats{flex-direction:column;align-items:flex-start;width:100%}
-  .hs-div{width:100%;height:1px}
-}
-@media(max-width:480px){
-  .sub-form{flex-direction:column}
-  .sub-form input{width:100%}
-  #cr,#cd{display:none}
-  body{cursor:auto}
-  a,button{cursor:pointer}
-  .fg{grid-template-columns:1fr}
-}
+.nl-note{font-size:.68rem;color:var(--text3);margin-top:8px}
+@media(max-width:960px){.hero-section{grid-template-columns:1fr}.hero-vis{display:none}.posts-grid{grid-template-columns:repeat(2,1fr)}.tp-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.mnav{display:none}.burg{display:flex}.posts-grid{grid-template-columns:1fr}.tp-grid{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){#cr,#cd{display:none}body{cursor:auto}a,button{cursor:pointer}.fg{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div id="cr"></div><div id="cd"></div>
+<div class="grid-bg"></div><div class="orb orb1"></div><div class="orb orb2"></div>
 
-<!-- CURSOR -->
-<div id="cr"></div>
-<div id="cd"></div>
-
-<!-- BG -->
-<div class="grid-bg"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
-
-<!-- ═══ HEADER ═══ -->
 <header id="hdr">
   <div class="hdr-in">
-    <a href="#" class="logo">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <path d="M4 14L14 4L24 14L14 24Z" stroke="#0070ff" stroke-width="2" fill="rgba(0,112,255,0.1)"/>
-        <path d="M8 14L14 8L20 14L14 20Z" fill="#0070ff" opacity=".8"/>
-        <circle cx="14" cy="14" r="2.5" fill="#fff"/>
-      </svg>
-      <span class="logo-word">SA<em>Pulse</em></span>
-    </a>
+    <a href="index.html" class="logo"><span class="logo-name">Misham Warsi</span><span class="logo-sub">SAP · Integration · Technology</span></a>
     <nav class="mnav">
-      <a href="#topics" class="na">Topics</a>
-      <a href="#featured" class="na">Featured</a>
-      <a href="#blogs" class="na">All Posts</a>
-      <a href="#about" class="na">About</a>
+      <a href="index.html" class="na active">Home</a>
+      <a href="topics.html" class="na">Topics</a>
+      <a href="blog.html" class="na">Blog</a>
+      <a href="about.html" class="na">About</a>
+      <a href="contact.html" class="na">Contact</a>
     </nav>
     <div class="hdr-r">
-      <a href="#subscribe" class="btn-pill">Subscribe Free</a>
-      <button class="burg" id="burg" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <a href="contact.html" class="btn-gold">Subscribe</a>
+      <button class="burg" id="burg"><span></span><span></span><span></span></button>
     </div>
   </div>
   <div class="mob-nav" id="mob-nav">
-    <a href="#topics">Topics</a>
-    <a href="#featured">Featured</a>
-    <a href="#blogs">All Posts</a>
-    <a href="#about">About</a>
-    <a href="#subscribe" class="mcta">Subscribe Free →</a>
+    <a href="index.html" class="active">Home</a><a href="topics.html">Topics</a><a href="blog.html">Blog</a><a href="about.html">About</a><a href="contact.html">Contact</a>
   </div>
 </header>
 
-<!-- ═══ HERO ═══ -->
-<section class="hero" id="hero">
+<section class="hero-section">
   <div class="float-w" aria-hidden="true">
-    <span style="--x:8%;--y:20%;--d:0s">ABAP</span>
-    <span style="--x:85%;--y:15%;--d:1.2s">S/4HANA</span>
-    <span style="--x:75%;--y:70%;--d:0.6s">IDOC</span>
-    <span style="--x:5%;--y:75%;--d:1.8s">RFC</span>
-    <span style="--x:50%;--y:88%;--d:0.3s">BAPI</span>
-    <span style="--x:90%;--y:45%;--d:2.1s">BASIS</span>
-    <span style="--x:15%;--y:50%;--d:1.5s">FIORI</span>
-    <span style="--x:60%;--y:10%;--d:0.9s">BTP</span>
+    <span style="--x:8%;--y:20%;--d:0s">ABAP</span><span style="--x:84%;--y:14%;--d:1.2s">S/4HANA</span><span style="--x:74%;--y:68%;--d:.6s">IDOC</span><span style="--x:5%;--y:74%;--d:1.8s">RFC</span><span style="--x:50%;--y:86%;--d:.3s">BAPI</span><span style="--x:90%;--y:44%;--d:2.1s">BASIS</span><span style="--x:16%;--y:50%;--d:1.5s">FIORI</span><span style="--x:60%;--y:9%;--d:.9s">BTP</span>
   </div>
-
-  <div class="hero-content">
-    <div class="hero-badge ru" style="--d:.1s"><span class="bdot"></span>SAP · Integration · Technology</div>
-    <h1 class="hero-h1 ru" style="--d:.25s">
-      Master SAP.<br>
-      <span class="h1g">Configure.</span><br>
-      <span class="h1o">Integrate.</span>
-    </h1>
-    <p class="hero-p ru" style="--d:.4s">In-depth guides on SAP Learning paths, system configuration, middleware integration, and the tech trends reshaping enterprise software. Written by practitioners, for practitioners.</p>
+  <div>
+    <div class="htag ru" style="--d:.1s"><span class="hdot"></span>SAP Expert · Technical Writer</div>
+    <h1 class="hero-h1 ru" style="--d:.25s">Learn SAP.<br><span class="h1g">Configure</span><br><span class="h1i">&amp; Integrate.</span></h1>
+    <p class="hero-p ru" style="--d:.4s">Practical deep-dives on SAP configuration, middleware integration, ABAP development, and the enterprise tech landscape — written from real project experience.</p>
     <div class="hero-acts ru" style="--d:.55s">
-      <a href="#blogs" class="btn-hero">
-        Explore Articles
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </a>
-      <a href="#topics" class="btn-ghost">Browse Topics</a>
+      <a href="blog.html" class="btn-gold">Read Articles</a>
+      <a href="topics.html" class="btn-out">Browse Topics</a>
     </div>
     <div class="hero-stats ru" style="--d:.7s">
       <div class="hs"><span class="hs-n" data-t="60">0</span><span class="hs-p">+</span><span class="hs-l">Articles</span></div>
@@ -449,507 +181,116 @@ body:has(a:hover) #cr,body:has(button:hover) #cr{width:52px;height:52px;backgrou
       <div class="hs"><span class="hs-n" data-t="3200">0</span><span class="hs-p">+</span><span class="hs-l">Readers</span></div>
     </div>
   </div>
-
-  <div class="hero-panel rr" style="--d:.5s" aria-hidden="true">
-    <div class="pc">
-      <div class="pc-ico">⚙️</div>
-      <div><div class="pc-t">SAP S/4HANA Config</div><div class="pc-s">Step-by-step guides</div></div>
-      <div class="pc-badge">New</div>
-    </div>
-    <div class="pcenter">
-      <div class="pring"><div class="pring-in">◈</div></div>
-      <div class="pmods">
-        <span>MM</span><span>SD</span><span>FI</span><span>CO</span>
-        <span>PP</span><span>HR</span><span>BTP</span><span>PI</span>
+  <div class="hero-vis rr" style="--d:.45s">
+    <div class="hv-card">
+      <div class="hv-top"><span class="hv-ico">🔗</span></div>
+      <div class="hv-body">
+        <div class="hv-meta"><span class="hv-cat">Featured Article</span><span class="hv-time">12 min read</span></div>
+        <div class="hv-title">Migrating SAP PI/PO to BTP Integration Suite: Zero-Downtime Guide</div>
+        <div class="hv-auth"><div class="hv-av">M</div><div><div class="hv-an">Misham Warsi</div><div class="hv-date">Mar 10, 2025</div></div></div>
       </div>
     </div>
-    <div class="pc">
-      <div class="pc-ico">🔗</div>
-      <div><div class="pc-t">Integration Patterns</div><div class="pc-s">RFC · IDoc · REST · SOAP</div></div>
-      <div class="pc-live"><span class="ldot"></span>Live</div>
+    <div class="hv-badges">
+      <div class="hv-badge"><span>⚙️</span>Configuration</div>
+      <div class="hv-badge"><span>🔗</span>Integration</div>
+      <div class="hv-badge"><span>💻</span>ABAP</div>
+      <div class="hv-badge"><span>☁️</span>BTP</div>
     </div>
   </div>
-
-  <div class="scroll-hint">
-    <div class="sm"><div class="sw"></div></div>
-    <span>Scroll</span>
-  </div>
+  <div class="scroll-hint"><div class="sm"><div class="sw"></div></div><span>Scroll</span></div>
 </section>
 
-<!-- ═══ MARQUEE ═══ -->
-<div class="mq-wrap" aria-hidden="true">
-  <div class="mq-track" id="mq">
-    <span>SAP S/4HANA</span><span class="dot">◆</span>
-    <span>ABAP Development</span><span class="dot">◆</span>
-    <span>SAP BTP</span><span class="dot">◆</span>
-    <span>Integration Suite</span><span class="dot">◆</span>
-    <span>Fiori / UI5</span><span class="dot">◆</span>
-    <span>SAP BASIS</span><span class="dot">◆</span>
-    <span>IDoc &amp; ALE</span><span class="dot">◆</span>
-    <span>Cloud Integration</span><span class="dot">◆</span>
-    <span>MM · SD · FI · CO</span><span class="dot">◆</span>
-    <span>RFC &amp; BAPI</span><span class="dot">◆</span>
+<div class="mq" aria-hidden="true">
+  <div class="mq-t" id="mq">
+    <span>SAP S/4HANA</span><span class="dot">◆</span><span>ABAP Development</span><span class="dot">◆</span><span>SAP BTP</span><span class="dot">◆</span><span>Integration Suite</span><span class="dot">◆</span><span>Fiori / UI5</span><span class="dot">◆</span><span>IDoc &amp; ALE</span><span class="dot">◆</span><span>RFC &amp; BAPI</span><span class="dot">◆</span><span>MM · SD · FI · CO</span><span class="dot">◆</span>
   </div>
 </div>
 
-<!-- ═══ TOPICS ═══ -->
-<section class="topics-sec" id="topics">
-  <div class="container">
-    <div class="sec-tag ru">What we cover</div>
-    <h2 class="sec-h2 ru" style="--d:.1s">Pick your learning path</h2>
-    <div class="tgrid">
-      <div class="tc tc-a ru" style="--d:.1s">
-        <div class="tc-ico">⚙️</div>
-        <h3>SAP Configuration</h3>
-        <p>Deep dives into IMG settings, enterprise structure, org units and module-level config for S/4HANA and ECC.</p>
-        <div class="tc-tags"><span>S/4HANA</span><span>ECC</span><span>IMG</span></div>
-        <a href="#blogs" class="tc-link">12 Articles →</a>
-      </div>
-      <div class="tc tc-b ru" style="--d:.2s">
-        <div class="tc-ico">🔗</div>
-        <h3>Integration &amp; Middleware</h3>
-        <p>SAP PI/PO, BTP Integration Suite, IDoc, ALE, RFC, BAPI, REST &amp; SOAP — every interface pattern explained.</p>
-        <div class="tc-tags"><span>PI/PO</span><span>BTP</span><span>IDoc</span></div>
-        <a href="#blogs" class="tc-link">18 Articles →</a>
-      </div>
-      <div class="tc tc-c ru" style="--d:.3s">
-        <div class="tc-ico">📘</div>
-        <h3>SAP Learning Paths</h3>
-        <p>Structured roadmaps for beginners to experts. Module guides, certification tips, and hands-on exercises.</p>
-        <div class="tc-tags"><span>Beginner</span><span>Certifications</span></div>
-        <a href="#blogs" class="tc-link">15 Articles →</a>
-      </div>
-      <div class="tc tc-d ru" style="--d:.4s">
-        <div class="tc-ico">💻</div>
-        <h3>ABAP &amp; Development</h3>
-        <p>ABAP OOP, BAdIs, Enhancements, CDS Views, RAP framework — from classic ABAP to modern cloud-ready code.</p>
-        <div class="tc-tags"><span>ABAP OOP</span><span>RAP</span><span>CDS</span></div>
-        <a href="#blogs" class="tc-link">10 Articles →</a>
-      </div>
-      <div class="tc tc-e ru" style="--d:.5s">
-        <div class="tc-ico">☁️</div>
-        <h3>SAP BTP &amp; Cloud</h3>
-        <p>SAP Business Technology Platform, CAP model, BTP Integration Suite, extension apps and cloud architecture.</p>
-        <div class="tc-tags"><span>CAP</span><span>BTP</span><span>Cloud</span></div>
-        <a href="#blogs" class="tc-link">9 Articles →</a>
-      </div>
-      <div class="tc tc-f ru" style="--d:.6s">
-        <div class="tc-ico">🚀</div>
-        <h3>General Technology</h3>
-        <p>AI in enterprise, microservices, DevOps, API design, and the broader tech world relevant to SAP professionals.</p>
-        <div class="tc-tags"><span>AI</span><span>DevOps</span><span>APIs</span></div>
-        <a href="#blogs" class="tc-link">11 Articles →</a>
-      </div>
+<section class="recent-sec">
+  <div class="wrap">
+    <div class="sec-tag ru">Latest</div>
+    <h2 class="sec-h2 ru" style="--d:.1s">Recent Articles</h2>
+    <div class="posts-grid">
+      <article class="pcard ru" style="--d:.1s">
+        <div class="ptop ptop-int"><span class="pico">🔗</span><span class="chip chip-int">Integration</span></div>
+        <div class="pbody"><h3>IDoc Architecture: Segments, Control Records &amp; Partner Profiles</h3><p>From EDID4 table to WE20 partner profile setup and inbound/outbound processing.</p><div class="pfoot"><span class="pdate">Jan 20, 2025</span><a href="blog.html" class="parr">Read →</a></div></div>
+      </article>
+      <article class="pcard ru" style="--d:.2s">
+        <div class="ptop ptop-sap"><span class="pico">⚙️</span><span class="chip chip-sap">Config</span></div>
+        <div class="pbody"><h3>SAP FI: General Ledger Configuration — Chart of Accounts to Posting Period</h3><p>Complete walkthrough of FI-GL setup including CoA assignment and fiscal year variant.</p><div class="pfoot"><span class="pdate">Jan 28, 2025</span><a href="blog.html" class="parr">Read →</a></div></div>
+      </article>
+      <article class="pcard ru" style="--d:.3s">
+        <div class="ptop ptop-learn"><span class="pico">📘</span><span class="chip chip-learn">Learning</span></div>
+        <div class="pbody"><h3>SAP for Beginners: Where to Start in 2025 — A Structured Roadmap</h3><p>Module recommendations, free trial systems, and the fastest path to your first certification.</p><div class="pfoot"><span class="pdate">Jan 12, 2025</span><a href="blog.html" class="parr">Read →</a></div></div>
+      </article>
+    </div>
+    <div class="view-all ru" style="--d:.4s"><a href="blog.html" class="btn-gold">View All Articles →</a></div>
+  </div>
+</section>
+
+<section class="topics-prev">
+  <div class="wrap">
+    <div class="sec-tag ru">Topics</div>
+    <h2 class="sec-h2 ru" style="--d:.1s">What I Write About</h2>
+    <div class="tp-grid">
+      <div class="tc tc-a ru" style="--d:.1s"><div class="tc-ico">⚙️</div><h3>SAP Configuration</h3><p>IMG settings, enterprise structure and module-level config for S/4HANA and ECC.</p><a href="topics.html" class="tc-link">Explore →</a></div>
+      <div class="tc tc-b ru" style="--d:.2s"><div class="tc-ico">🔗</div><h3>Integration &amp; Middleware</h3><p>SAP PI/PO, BTP Integration Suite, IDoc, ALE, RFC, BAPI, REST &amp; SOAP.</p><a href="topics.html" class="tc-link">Explore →</a></div>
+      <div class="tc tc-c ru" style="--d:.3s"><div class="tc-ico">📘</div><h3>SAP Learning Paths</h3><p>Roadmaps for beginners to experts, certification tips, and hands-on exercises.</p><a href="topics.html" class="tc-link">Explore →</a></div>
+      <div class="tc tc-d ru" style="--d:.4s"><div class="tc-ico">💻</div><h3>ABAP &amp; Development</h3><p>ABAP OOP, BAdIs, CDS Views, RAP framework — classic to modern cloud-ready code.</p><a href="topics.html" class="tc-link">Explore →</a></div>
+      <div class="tc tc-e ru" style="--d:.5s"><div class="tc-ico">☁️</div><h3>SAP BTP &amp; Cloud</h3><p>Business Technology Platform, CAP model, BTP Integration Suite and extension apps.</p><a href="topics.html" class="tc-link">Explore →</a></div>
+      <div class="tc tc-f ru" style="--d:.6s"><div class="tc-ico">🚀</div><h3>General Technology</h3><p>AI in enterprise, microservices, DevOps, API design and emerging tech trends.</p><a href="topics.html" class="tc-link">Explore →</a></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FEATURED ═══ -->
-<section class="feat-sec" id="featured">
-  <div class="container">
-    <div class="sec-tag ru">Editor's pick</div>
-    <h2 class="sec-h2 ru" style="--d:.1s">Featured Articles</h2>
-    <div class="feat-grid">
-      <article class="feat-main ru" style="--d:.2s">
-        <div class="feat-img">
-          <div class="feat-img-pat"></div>
-          <span class="chip chip-int">Integration</span>
-        </div>
-        <div class="feat-body">
-          <div class="feat-meta">
-            <span class="feat-cat">SAP PI/PO → BTP Migration</span>
-            <span class="feat-time">12 min read</span>
-          </div>
-          <h3 class="feat-title">Migrating from SAP PI/PO to BTP Integration Suite: A Complete Walkthrough</h3>
-          <p class="feat-exc">Step-by-step guide covering landscape assessment, iFlow design patterns, adapter migration, error handling and go-live checklist for a zero-downtime cutover.</p>
-          <div class="feat-foot">
-            <div class="auth-row">
-              <div class="auth-av">R</div>
-              <div><div class="auth-name">Misham Warsi</div><div class="auth-date">Mar 10, 2025</div></div>
-            </div>
-            <a href="#" class="read-arr">Read →</a>
-          </div>
-        </div>
-      </article>
-      <div class="feat-side">
-        <article class="feat-mini ru" style="--d:.35s">
-          <div class="fmico fmico-a">⚙️</div>
-          <div class="fm-body">
-            <span class="chip chip-config">Config</span>
-            <h4>SAP MM Org Structure: Company Code, Plant &amp; Storage Location Setup</h4>
-            <p>A visual guide to enterprise structure configuration in Materials Management.</p>
-            <div class="mini-foot"><span>Feb 22, 2025</span><a href="#">Read →</a></div>
-          </div>
-        </article>
-        <article class="feat-mini ru" style="--d:.45s">
-          <div class="fmico fmico-b">💻</div>
-          <div class="fm-body">
-            <span class="chip chip-abap">ABAP</span>
-            <h4>CDS Views with Associations: Building the Data Model Layer in RAP</h4>
-            <p>How CDS associations replace classic JOINs in the ABAP RESTful Programming Model.</p>
-            <div class="mini-foot"><span>Feb 15, 2025</span><a href="#">Read →</a></div>
-          </div>
-        </article>
-        <article class="feat-mini ru" style="--d:.55s">
-          <div class="fmico fmico-c">🚀</div>
-          <div class="fm-body">
-            <span class="chip chip-tech">Tech</span>
-            <h4>How AI is Transforming SAP Implementations in 2025</h4>
-            <p>From Joule copilot to AI-assisted ABAP generation — what's real and what's hype.</p>
-            <div class="mini-foot"><span>Feb 5, 2025</span><a href="#">Read →</a></div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ALL POSTS ═══ -->
-<section class="blogs-sec" id="blogs">
-  <div class="container">
-    <div class="blogs-hdr">
-      <div>
-        <div class="sec-tag ru">The archive</div>
-        <h2 class="sec-h2 ru" style="--d:.1s">All Articles</h2>
-      </div>
-      <div class="srch ru" style="--d:.15s">
-        <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <input type="text" id="search" placeholder="Search articles…" autocomplete="off" />
-      </div>
-    </div>
-    <div class="pills ru" id="filters" style="--d:.2s">
-      <button class="pill active" data-f="all">All</button>
-      <button class="pill" data-f="config">Config</button>
-      <button class="pill" data-f="int">Integration</button>
-      <button class="pill" data-f="learn">Learning</button>
-      <button class="pill" data-f="abap">ABAP</button>
-      <button class="pill" data-f="btp">BTP/Cloud</button>
-      <button class="pill" data-f="tech">Tech</button>
-    </div>
-    <div class="agrid" id="agrid">
-
-      <article class="acard ru" data-f="config" style="--d:.1s">
-        <div class="atop atop-config"><span class="aemoji">⚙️</span><span class="acat acat-config">Config</span></div>
-        <div class="abody">
-          <h3>SAP FI: General Ledger Configuration — Chart of Accounts to Posting Period</h3>
-          <p>Complete walkthrough of FI-GL setup including CoA assignment, fiscal year variant, and posting period intervals.</p>
-          <div class="afoot"><div class="atags"><span>FI</span><span>GL</span></div><div class="ainfo"><span>Jan 28</span><span>·</span><span>9 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="int" style="--d:.15s">
-        <div class="atop atop-int"><span class="aemoji">🔗</span><span class="acat acat-int">Integration</span></div>
-        <div class="abody">
-          <h3>IDoc Architecture Explained: Segments, Control Records &amp; Partner Profiles</h3>
-          <p>Everything about IDoc structure — from EDID4 table to WE20 partner profile setup and inbound/outbound processing.</p>
-          <div class="afoot"><div class="atags"><span>IDoc</span><span>ALE</span></div><div class="ainfo"><span>Jan 20</span><span>·</span><span>11 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="learn" style="--d:.2s">
-        <div class="atop atop-learn"><span class="aemoji">📘</span><span class="acat acat-learn">Learning</span></div>
-        <div class="abody">
-          <h3>SAP for Beginners: Where to Start in 2025 — A Structured Roadmap</h3>
-          <p>Module recommendations, free trial systems, SAP Learning Hub access and the fastest path to your first certification.</p>
-          <div class="afoot"><div class="atags"><span>Beginner</span><span>Roadmap</span></div><div class="ainfo"><span>Jan 12</span><span>·</span><span>7 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="abap" style="--d:.25s">
-        <div class="atop atop-abap"><span class="aemoji">💻</span><span class="acat acat-abap">ABAP</span></div>
-        <div class="abody">
-          <h3>ABAP BAdIs vs Enhancement Spots: When to Use Which</h3>
-          <p>A practical comparison of classic BAdIs, kernel BAdIs, and enhancement spots with real-world implementation examples.</p>
-          <div class="afoot"><div class="atags"><span>BAdI</span><span>Enhancement</span></div><div class="ainfo"><span>Dec 30</span><span>·</span><span>8 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="btp" style="--d:.3s">
-        <div class="atop atop-btp"><span class="aemoji">☁️</span><span class="acat acat-btp">BTP</span></div>
-        <div class="abody">
-          <h3>Building Your First CAP Application on SAP BTP: End-to-End</h3>
-          <p>From project scaffolding to deployment — CDS data model, service definition, Fiori Elements UI on BTP Cloud Foundry.</p>
-          <div class="afoot"><div class="atags"><span>CAP</span><span>CDS</span></div><div class="ainfo"><span>Dec 18</span><span>·</span><span>14 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="tech" style="--d:.35s">
-        <div class="atop atop-tech"><span class="aemoji">🤖</span><span class="acat acat-tech">Tech</span></div>
-        <div class="abody">
-          <h3>REST API Design Principles Every SAP Developer Should Know</h3>
-          <p>Naming conventions, HTTP methods, status codes, versioning and pagination — with SAP OData as a reference point.</p>
-          <div class="afoot"><div class="atags"><span>REST</span><span>API</span></div><div class="ainfo"><span>Dec 10</span><span>·</span><span>6 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="int" style="--d:.4s">
-        <div class="atop atop-int"><span class="aemoji">🔄</span><span class="acat acat-int">Integration</span></div>
-        <div class="abody">
-          <h3>RFC vs BAPI vs Web Services: Choosing the Right Interface Technology</h3>
-          <p>A side-by-side comparison of SAP's core interface technologies with latency benchmarks and use-case recommendations.</p>
-          <div class="afoot"><div class="atags"><span>RFC</span><span>BAPI</span><span>WS</span></div><div class="ainfo"><span>Nov 28</span><span>·</span><span>10 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="config" style="--d:.45s">
-        <div class="atop atop-config"><span class="aemoji">📦</span><span class="acat acat-config">Config</span></div>
-        <div class="abody">
-          <h3>SAP SD Order-to-Cash: Complete Configuration Checklist</h3>
-          <p>Sales org, distribution channel, division, pricing procedures, output types and billing config — nothing left out.</p>
-          <div class="afoot"><div class="atags"><span>SD</span><span>O2C</span></div><div class="ainfo"><span>Nov 15</span><span>·</span><span>13 min</span></div></div>
-        </div>
-      </article>
-
-      <article class="acard ru" data-f="btp" style="--d:.5s">
-        <div class="atop atop-btp"><span class="aemoji">🌐</span><span class="acat acat-btp">BTP</span></div>
-        <div class="abody">
-          <h3>SAP BTP Integration Suite: CPI vs API Management — What Goes Where</h3>
-          <p>Clarifying architectural boundaries between Cloud Integration and API Management with concrete scenario mapping.</p>
-          <div class="afoot"><div class="atags"><span>CPI</span><span>API Mgmt</span></div><div class="ainfo"><span>Nov 5</span><span>·</span><span>8 min</span></div></div>
-        </div>
-      </article>
-
-    </div>
-    <div class="no-res hidden" id="no-res"><span>🔍</span><p>No articles matched. Try a different keyword or category.</p></div>
-    <div class="load-row ru">
-      <button class="btn-load" id="load-more">Load More Articles</button>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ABOUT ═══ -->
-<section class="about-sec" id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div class="about-txt ru">
-        <div class="sec-tag">The author</div>
-        <h2 class="sec-h2">Why this blog exists</h2>
-        <p>SAP documentation is vast and often dense. This blog cuts through the noise — every post is written from real project experience, not copied from help.sap.com. If you've ever spent 3 hours debugging an IDoc partner profile, this place is for you.</p>
-        <p>Topics range from beginner configuration guides to advanced integration patterns, ABAP clean code, and the wave of AI reshaping enterprise tech.</p>
-        <div class="abadges">
-          <div class="abadge"><span>🎓</span> SAP Certified Consultant</div>
-          <div class="abadge"><span>🏗️</span> 8+ Years SAP Projects</div>
-          <div class="abadge"><span>🌍</span> Writing from New Delhi</div>
-        </div>
-      </div>
-      <div class="ru" style="--d:.2s">
-        <div class="av-card">
-          <div class="av-av">R</div>
-          <div class="av-name">Misham Warsi</div>
-          <div class="av-role">SAP Consultant &amp; Technical Writer &amp; Traveller</div>
-          <div class="av-div"></div>
-          <div class="av-stats">
-            <div class="avs"><span class="avs-n" data-t="60">0</span><span class="avs-l">Articles</span></div>
-            <div class="avs"><span class="avs-n" data-t="8">0</span><span class="avs-l">Modules</span></div>
-            <div class="avs"><span class="avs-n" data-t="3200">0</span><span class="avs-l">Readers</span></div>
-          </div>
-          <div class="av-socs">
-            <a href="#" class="av-soc">in</a>
-            <a href="#" class="av-soc">gh</a>
-            <a href="#" class="av-soc">tw</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ NEWSLETTER ═══ -->
-<section class="sub-sec" id="subscribe">
-  <div class="sub-bg" aria-hidden="true">SAP</div>
-  <div class="container">
-    <div class="sub-inner ru">
-      <span class="sub-ico">✦</span>
-      <h2 class="sub-h2">Stay ahead of the curve.</h2>
-      <p class="sub-p">New SAP config guides, integration deep-dives and tech insights — delivered to your inbox. No spam, unsubscribe anytime.</p>
-      <form class="sub-form" id="sub-form" onsubmit="handleSub(event)">
-        <input type="email" id="sub-email" placeholder="your@email.com" required />
-        <button type="submit" class="btn-pill">Subscribe →</button>
+<section class="nl-sec">
+  <div class="wrap">
+    <div class="nl-inner ru">
+      <span class="nl-ico">✦</span>
+      <h2 class="nl-h">Get articles in your inbox.</h2>
+      <p class="nl-p">SAP config guides, integration patterns, and tech insights — no spam, ever.</p>
+      <form class="nl-form" id="nl-form" onsubmit="handleSub(event)">
+        <input type="email" placeholder="your@email.com" required/>
+        <button type="submit" class="btn-gold">Subscribe →</button>
       </form>
-      <div class="sub-ok hidden" id="sub-ok">✦ Welcome aboard! Check your inbox.</div>
-      <p class="sub-note">Join 3,200+ SAP professionals</p>
+      <div class="nl-ok hidden" id="nl-ok">✦ You're in! Welcome aboard.</div>
+      <p class="nl-note">Join 3,200+ SAP professionals</p>
     </div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="footer">
-  <div class="container">
+<footer class="site-footer">
+  <div class="wrap">
     <div class="fg">
-      <div class="fb">
-        <a href="#" class="logo">
-          <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-            <path d="M4 14L14 4L24 14L14 24Z" stroke="#0070ff" stroke-width="2" fill="rgba(0,112,255,0.1)"/>
-            <path d="M8 14L14 8L20 14L14 20Z" fill="#0070ff" opacity=".8"/>
-            <circle cx="14" cy="14" r="2.5" fill="#fff"/>
-          </svg>
-          <span class="logo-word">SA<em>Pulse</em></span>
-        </a>
-        <p>Deep technical content for SAP professionals and enterprise tech enthusiasts.</p>
-      </div>
-      <div class="fcol">
-        <div class="fch">Topics</div>
-        <a href="#">SAP Configuration</a>
-        <a href="#">Integration</a>
-        <a href="#">ABAP Dev</a>
-        <a href="#">SAP BTP</a>
-        <a href="#">Learning Paths</a>
-        <a href="#">Technology</a>
-      </div>
-      <div class="fcol">
-        <div class="fch">Resources</div>
-        <a href="#">All Articles</a>
-        <a href="#">SAP Glossary</a>
-        <a href="#">Cheat Sheets</a>
-        <a href="#">Newsletter</a>
-      </div>
-      <div class="fcol">
-        <div class="fch">Connect</div>
-        <a href="#">LinkedIn</a>
-        <a href="#">GitHub</a>
-        <a href="#">Twitter / X</a>
-        <a href="#">RSS Feed</a>
-      </div>
+      <div class="fb-brand"><a href="index.html" class="logo"><span class="logo-name">Misham Warsi</span><span class="logo-sub">SAP · Integration · Technology</span></a><p>Practical SAP content for consultants, developers, and learners.</p></div>
+      <div class="fcol"><div class="fch">Pages</div><a href="index.html">Home</a><a href="topics.html">Topics</a><a href="blog.html">Blog</a><a href="about.html">About</a><a href="contact.html">Contact</a></div>
+      <div class="fcol"><div class="fch">Topics</div><a href="topics.html">SAP Config</a><a href="topics.html">Integration</a><a href="topics.html">ABAP</a><a href="topics.html">BTP/Cloud</a><a href="topics.html">Tech</a></div>
+      <div class="fcol"><div class="fch">Connect</div><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">Twitter/X</a><a href="contact.html">Newsletter</a></div>
     </div>
-    <div class="fbot">
-      <span>© 2025 SAPulse. Built with ☕ and ABAP passion.</span>
-      <div class="fbl"><a href="#">Privacy</a><a href="#">Sitemap</a></div>
-    </div>
+    <div class="fbot"><span>© 2025 Misham Warsi. All rights reserved.</span><div class="fbl"><a href="#">Privacy</a><a href="#">Sitemap</a></div></div>
   </div>
 </footer>
 
 <script>
 'use strict';
-
-/* CURSOR */
-const cr = document.getElementById('cr');
-const cd = document.getElementById('cd');
-let mx=0,my=0,cx=0,cy=0;
+const cr=document.getElementById('cr'),cd=document.getElementById('cd');let mx=0,my=0,cx=0,cy=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
 (function loop(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;cr.style.left=cx+'px';cr.style.top=cy+'px';requestAnimationFrame(loop)})();
-
-/* HEADER SCROLL */
-const hdr=document.getElementById('hdr');
-window.addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>30),{passive:true});
-
-/* BURGER */
-const burg=document.getElementById('burg');
-const mob=document.getElementById('mob-nav');
-burg.addEventListener('click',()=>{
-  const o=mob.classList.toggle('open');
-  burg.setAttribute('aria-expanded',String(o));
-  const [s1,s2,s3]=burg.querySelectorAll('span');
-  if(o){s1.style.transform='translateY(6.5px) rotate(45deg)';s2.style.opacity='0';s3.style.transform='translateY(-6.5px) rotate(-45deg)';}
-  else{[s1,s2,s3].forEach(s=>{s.style.transform='';s.style.opacity='';})}
-});
-mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  mob.classList.remove('open');
-  burg.querySelectorAll('span').forEach(s=>{s.style.transform='';s.style.opacity='';});
-}));
-
-/* REVEAL */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
-},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+window.addEventListener('scroll',()=>document.getElementById('hdr').classList.toggle('scrolled',scrollY>30),{passive:true});
+const burg=document.getElementById('burg'),mob=document.getElementById('mob-nav');
+burg.addEventListener('click',()=>{const o=mob.classList.toggle('open');const s=burg.querySelectorAll('span');if(o){s[0].style.transform='translateY(6.5px) rotate(45deg)';s[1].style.opacity='0';s[2].style.transform='translateY(-6.5px) rotate(-45deg)'}else s.forEach(x=>{x.style.transform='';x.style.opacity='';})});
+mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classList.remove('open');burg.querySelectorAll('span').forEach(x=>{x.style.transform='';x.style.opacity='';});}));
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');obs.unobserve(x.target);}});},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.ru,.rr').forEach(el=>obs.observe(el));
-window.addEventListener('load',()=>{
-  document.querySelectorAll('.hero .ru,.hero .rr').forEach(el=>setTimeout(()=>el.classList.add('in'),80));
-});
-
-/* MARQUEE DOUBLE */
-const mq=document.getElementById('mq');
-if(mq) mq.innerHTML+=mq.innerHTML;
-
-/* COUNTERS */
-function count(el){
-  const t=+el.dataset.t,dur=1800,s=performance.now();
-  (function tick(now){
-    const p=Math.min((now-s)/dur,1),e=1-Math.pow(2,-10*p);
-    el.textContent=Math.floor(e*t);
-    if(p<1)requestAnimationFrame(tick);
-    else el.textContent=t>=1000?t.toLocaleString()+'+':t+(t>20?'+':'');
-  })(s);
-}
-const cobs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){count(e.target);cobs.unobserve(e.target);}});
-},{threshold:.6});
-document.querySelectorAll('.hs-n,.avs-n').forEach(el=>cobs.observe(el));
-
-/* FILTER + SEARCH */
-const pills=document.querySelectorAll('.pill');
-const cards=document.querySelectorAll('.acard');
-const srch=document.getElementById('search');
-const noRes=document.getElementById('no-res');
-let activeF='all',q='';
-function applyFilter(){
-  let v=0;
-  cards.forEach(c=>{
-    const ok=(activeF==='all'||c.dataset.f===activeF)&&(!q||c.querySelector('h3').textContent.toLowerCase().includes(q)||c.querySelector('p').textContent.toLowerCase().includes(q));
-    c.classList.toggle('hidden',!ok);
-    if(ok)v++;
-  });
-  noRes.classList.toggle('hidden',v>0);
-}
-pills.forEach(p=>p.addEventListener('click',()=>{
-  pills.forEach(x=>x.classList.remove('active'));
-  p.classList.add('active');
-  activeF=p.dataset.f;applyFilter();
-}));
-srch&&srch.addEventListener('input',()=>{q=srch.value.trim().toLowerCase();applyFilter();});
-
-/* LOAD MORE */
-const loadBtn=document.getElementById('load-more');
-const grid=document.getElementById('agrid');
-let loaded=0;
-const more=[
-  {f:'learn',top:'atop-learn',em:'🎯',cat:'acat-learn',cl:'Learning',t:'SAP C_TS410 Certification: Study Strategy That Actually Works',d:'Exam breakdown, mock test resources, and a 6-week prep plan from someone who passed on the first attempt.',tags:['C_TS410','Exam'],date:'Oct 28',time:'6 min'},
-  {f:'int',top:'atop-int',em:'🌐',cat:'acat-int',cl:'Integration',t:'SAP OData Services: Creating Custom Services with SEGW',d:'Building OData services using the Gateway Service Builder — entity types, associations, and CRUD methods.',tags:['OData','SEGW'],date:'Oct 15',time:'9 min'},
-  {f:'abap',top:'atop-abap',em:'🧩',cat:'acat-abap',cl:'ABAP',t:'ABAP Unit Testing: Writing Testable Code from Day One',d:'Test-driven development in ABAP — mock objects, test doubles, and the ABAP Unit framework.',tags:['Unit Test','TDD'],date:'Oct 3',time:'8 min'}
-];
-loadBtn&&loadBtn.addEventListener('click',()=>{
-  if(loaded>=more.length){loadBtn.textContent='All caught up ✓';loadBtn.disabled=true;return;}
-  const p=more[loaded++];
-  const a=document.createElement('article');
-  a.className='acard ru';a.dataset.f=p.f;
-  a.innerHTML=`<div class="atop ${p.top}"><span class="aemoji">${p.em}</span><span class="acat ${p.cat}">${p.cl}</span></div><div class="abody"><h3>${p.t}</h3><p>${p.d}</p><div class="afoot"><div class="atags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="ainfo"><span>${p.date}</span><span>·</span><span>${p.time}</span></div></div></div>`;
-  grid.appendChild(a);setTimeout(()=>a.classList.add('in'),60);applyFilter();
-  if(loaded>=more.length){loadBtn.textContent='All caught up ✓';loadBtn.disabled=true;}
-});
-
-/* NEWSLETTER */
-function handleSub(e){
-  e.preventDefault();
-  document.getElementById('sub-form').classList.add('hidden');
-  document.getElementById('sub-ok').classList.remove('hidden');
-}
+window.addEventListener('load',()=>document.querySelectorAll('.hero-section .ru,.hero-section .rr').forEach(el=>setTimeout(()=>el.classList.add('in'),80)));
+const mq=document.getElementById('mq');if(mq)mq.innerHTML+=mq.innerHTML;
+function count(el){const t=+el.dataset.t,dur=1800,s=performance.now();(function tick(n){const p=Math.min((n-s)/dur,1),e=1-Math.pow(2,-10*p);el.textContent=Math.floor(e*t);if(p<1)requestAnimationFrame(tick);else el.textContent=t>=1000?t.toLocaleString()+'+':t+'+'})(s);}
+const co=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){count(x.target);co.unobserve(x.target);}});},{threshold:.6});
+document.querySelectorAll('.hs-n').forEach(el=>co.observe(el));
+function handleSub(e){e.preventDefault();document.getElementById('nl-form').classList.add('hidden');document.getElementById('nl-ok').classList.remove('hidden');}
 window.handleSub=handleSub;
-
-/* SMOOTH ANCHORS */
-document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
-  const t=document.querySelector(a.getAttribute('href'));
-  if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
-}));
-
-/* TILT CARDS */
-document.querySelectorAll('.pc,.feat-main').forEach(card=>{
-  card.addEventListener('mousemove',e=>{
-    const r=card.getBoundingClientRect();
-    const dx=(e.clientX-r.left-r.width/2)/r.width;
-    const dy=(e.clientY-r.top-r.height/2)/r.height;
-    card.style.transform=`perspective(700px) rotateY(${dx*5}deg) rotateX(${-dy*3}deg) translateY(-3px)`;
-  });
-  card.addEventListener('mouseleave',()=>card.style.transform='');
-});
-
-/* ORB FOLLOW */
-const orb1=document.querySelector('.orb1');
-let ot;document.addEventListener('mousemove',e=>{
-  clearTimeout(ot);ot=setTimeout(()=>{
-    if(orb1){orb1.style.transform=`translate(${(e.clientX/innerWidth-.5)*70}px,${(e.clientY/innerHeight-.5)*50}px)`;}
-  },30);
-},{passive:true});
-
-console.log('%c◈ SAPulse','font-size:1.4rem;font-family:serif;color:#0070ff;font-weight:bold;');
+const orb1=document.querySelector('.orb1');let ot;
+document.addEventListener('mousemove',e=>{clearTimeout(ot);ot=setTimeout(()=>{if(orb1)orb1.style.transform=`translate(${(e.clientX/innerWidth-.5)*60}px,${(e.clientY/innerHeight-.5)*44}px)`;},30);},{passive:true});
 </script>
 </body>
 </html>
