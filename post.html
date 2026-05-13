@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post — Misham Warsi</title>
+<link rel="stylesheet" href="../style.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-container">
+    <a href="../index.html" class="logo">Misham Warsi</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../blog.html">All Posts</a>
+      <a href="../about.html">About</a>
+    </div>
+    <div class="nav-tags">
+      <a href="../blog.html?cat=sap" class="tag tag-sap">SAP</a>
+      <a href="../blog.html?cat=travel" class="tag tag-travel">Travel</a>
+      <a href="../blog.html?cat=tech" class="tag tag-tech">Tech</a>
+    </div>
+  </nav>
+</header>
+
+<main class="post-main">
+  <article id="post-article">
+    <div class="loading-state">Loading post...</div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <p>© 2025 Misham Warsi · Built with passion, hosted on GitHub Pages</p>
+</footer>
+
+<script src="../js/app.js"></script>
+<script>
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (id) loadPost(id);
+</script>
+</body>
+</html>
